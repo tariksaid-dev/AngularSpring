@@ -12,6 +12,7 @@ export class FormComponent implements OnInit {
 
   public cliente: Cliente = new Cliente();
   public titulo: string = "Crear Cliente";
+  public errores: string[] = [];
 
   constructor (
     private clienteService: ClienteService,
@@ -35,21 +36,33 @@ export class FormComponent implements OnInit {
 
   public create(): void {
     this.clienteService.create(this.cliente)
-    .subscribe(
-      cliente => {
-        this.router.navigate(['/clientes'])
-        swal('Nuevo cliente', `Cliente ${cliente.nombre} creado con éxito!`, 'success')
+    .subscribe({
+      next: (c) => {
+        swal('Nuevo cliente', `El cliente ${c.nombre} ha sido creado con éxito!`, 'success')
+      },
+      error: (err) => {
+        this.errores = this.clienteService.getErrores();
+      }, 
+      complete: () => {
+        console.log("Completed");
+        this.router.navigate(['/clientes']);
       }
-    )
+    })
   };
 
   public update(): void {
     this.clienteService.udpate(this.cliente)
-    .subscribe(
-      cliente => {
-        this.router.navigate(['/clientes'])
-        swal('Cliente Actualizado', `Cliente ${cliente.nombre} creado con éxito!`, 'success')
+    .subscribe({
+      next: (c) => {
+        swal('Cliente actualizado', `El cliente ${c.nombre} ha sido actualizado con éxito!`, 'success')
+      },
+      error: (err) => {
+        this.errores = this.clienteService.getErrores();
+      },
+      complete: () => {
+        console.log("Completed");
+        this.router.navigate(['/clientes']);
       }
-    )
+    });
   }
 }
