@@ -17,7 +17,7 @@ export class ClientesComponent implements OnInit {
   constructor(
     private clienteService: ClienteService,
     private activatedRoute: ActivatedRoute
-    ) {}
+  ) {}
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(
