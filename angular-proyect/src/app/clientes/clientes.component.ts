@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Cliente } from './cliente';
 import { ClienteService } from './cliente.service';
+import { ModalService } from './detalle/modal.service';
 import swal from 'sweetalert2';
 import { tap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -13,13 +14,15 @@ export class ClientesComponent implements OnInit {
 
   public clientes: Cliente[] = [];
   public paginador: any;
+  public clienteSeleccionado: Cliente;
 
   constructor(
     private clienteService: ClienteService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute, 
+    private modalService: ModalService
   ) {}
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe(
       params => {
         let page: number = +params.get('page');
@@ -36,8 +39,16 @@ export class ClientesComponent implements OnInit {
             response => {this.clientes = response.content as Cliente[];
               this.paginador = response;
             });
-      }
-    )
+      });
+
+      this.modalService.notificarUpload.subscribe(cliente => {
+        this.clientes = this.clientes.map(clienteOriginal => {
+          if(cliente.id == clienteOriginal.id) {
+            clienteOriginal.foto = cliente.foto;
+          }
+          return clienteOriginal;
+        })
+      })
   }
 
   delete(cliente: Cliente): void {
@@ -58,7 +69,7 @@ export class ClientesComponent implements OnInit {
       if (result.value) {
         console.log('aa');
         this.clienteService.delete(cliente.id).subscribe(
-          response => {
+          () => {
             this.clientes = this.clientes.filter(cli => cli !== cliente)
             swal(
               'Cliente eliminado!',
@@ -69,5 +80,10 @@ export class ClientesComponent implements OnInit {
         )
       }
     })
+  }
+
+  public abrirModal(cliente: Cliente): void {
+    this.clienteSeleccionado = cliente;
+    this.modalService.abrirModal();
   }
 }

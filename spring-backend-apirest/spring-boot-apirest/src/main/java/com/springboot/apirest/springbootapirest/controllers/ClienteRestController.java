@@ -172,7 +172,7 @@ public class ClienteRestController {
       String nombreFotoAnterior = cliente.getFoto();
 
       if (nombreFotoAnterior != null && nombreFotoAnterior.length() > 0) {
-        Path rutaFotoAnterior = Paths.get("spring-boot-apirest/uploads").resolve(nombreFotoAnterior).toAbsolutePath();
+        Path rutaFotoAnterior = Paths.get("uploads").resolve(nombreFotoAnterior).toAbsolutePath();
         File archivoFotoAnterior = rutaFotoAnterior.toFile();
         if (archivoFotoAnterior.exists() && archivoFotoAnterior.canRead()) {
           archivoFotoAnterior.delete();
@@ -201,7 +201,7 @@ public class ClienteRestController {
 
     if (!archivo.isEmpty()) {
       String nombreArchivo = UUID.randomUUID().toString() + "_" + archivo.getOriginalFilename().replace(" ", "");
-      Path rutaArchivo = Paths.get("spring-boot-apirest/uploads").resolve(nombreArchivo).toAbsolutePath();
+      Path rutaArchivo = Paths.get("uploads").resolve(nombreArchivo).toAbsolutePath();
       log.info(rutaArchivo.toString());
       try {
         Files.copy(archivo.getInputStream(), rutaArchivo);
@@ -214,7 +214,7 @@ public class ClienteRestController {
       String nombreFotoAnterior = cliente.getFoto();
 
       if (nombreFotoAnterior != null && nombreFotoAnterior.length() > 0) {
-        Path rutaFotoAnterior = Paths.get("spring-boot-apirest/uploads").resolve(nombreFotoAnterior).toAbsolutePath();
+        Path rutaFotoAnterior = Paths.get("uploads").resolve(nombreFotoAnterior).toAbsolutePath();
         File archivoFotoAnterior = rutaFotoAnterior.toFile();
         if (archivoFotoAnterior.exists() && archivoFotoAnterior.canRead()) {
           archivoFotoAnterior.delete();
@@ -233,7 +233,7 @@ public class ClienteRestController {
   @GetMapping("/uploads/img/{nombreFoto:.+}")
   public ResponseEntity<Resource> verFoto(@PathVariable String nombreFoto) {
 
-    Path rutaArchivo = Paths.get("spring-boot-apirest/uploads").resolve(nombreFoto).toAbsolutePath();
+    Path rutaArchivo = Paths.get("uploads").resolve(nombreFoto).toAbsolutePath();
     log.info(rutaArchivo.toString());
     Resource recurso = null;
 
@@ -244,7 +244,15 @@ public class ClienteRestController {
     }
 
     if (!recurso.exists() && !recurso.isReadable()) {
-      throw new RuntimeException("Error no se pudo cargar la imagen: " + nombreFoto);
+      rutaArchivo = Paths.get("src/main/resources/static/images").resolve("no-usuario.png").toAbsolutePath();
+
+      try {
+        recurso = new UrlResource(rutaArchivo.toUri());
+      } catch (MalformedURLException e) {
+        e.printStackTrace();
+      }
+
+      log.error("Error, nos e pudo cargar la imagen: " + nombreFoto);
     }
     HttpHeaders cabecera = new HttpHeaders();
     cabecera.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + recurso.getFilename() + "\"");
