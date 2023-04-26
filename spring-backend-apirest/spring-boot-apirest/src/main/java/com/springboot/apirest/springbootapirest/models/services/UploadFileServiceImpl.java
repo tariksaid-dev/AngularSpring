@@ -27,6 +27,7 @@ public class UploadFileServiceImpl implements iUploadFileService {
 
     Path rutaArchivo = getPath(nombreFoto);
     log.info(rutaArchivo.toString());
+
     Resource recurso = new UrlResource(rutaArchivo.toUri());
 
     if (!recurso.exists() && !recurso.isReadable()) {
