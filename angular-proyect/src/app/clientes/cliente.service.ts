@@ -3,6 +3,7 @@ import { Cliente } from './cliente';
 import { Observable, of, map, catchError, throwError, tap } from 'rxjs';
 import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { Region } from './region';
 import swal from 'sweetalert2';
 
 
@@ -21,6 +22,10 @@ export class ClienteService {
     private http: HttpClient,
     private router: Router
   ) { }
+
+  public getRegiones(): Observable<Region[]> {
+    return this.http.get<Region[]>(this.urlEndPoint + '/regiones');
+  }
 
   public getErrores(): string[] {
     return this.errores;
