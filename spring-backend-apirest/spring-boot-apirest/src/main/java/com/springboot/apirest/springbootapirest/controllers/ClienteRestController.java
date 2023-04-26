@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessException;
@@ -35,8 +35,6 @@ import com.springboot.apirest.springbootapirest.models.entity.Cliente;
 import com.springboot.apirest.springbootapirest.models.entity.Region;
 import com.springboot.apirest.springbootapirest.models.services.iClienteService;
 import com.springboot.apirest.springbootapirest.models.services.iUploadFileService;
-
-import jakarta.validation.Valid;
 
 @CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
