@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Cliente } from './cliente';
-import { Observable, of, map, catchError, throwError, tap } from 'rxjs';
+import { Observable, map, catchError, throwError, tap } from 'rxjs';
 import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Region } from './region';
 import swal from 'sweetalert2';
+import { AuthService } from '../usuarios/auth.service';
 
 
 @Injectable({
@@ -14,17 +15,55 @@ export class ClienteService {
 
   private urlEndPoint: string = 'http://localhost:8080/api/clientes';
 
-  private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'})
+  // Enviamos los headers mediante nuestro interceptor
+  // private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
 
   public errores: string[] = [];
 
   constructor(
     private http: HttpClient,
-    private router: Router
-  ) { }
+    private router: Router, 
+    // private authService: AuthService
+  ) {}
+
+  // private agregarAuthorizationHeader() {
+  //   let token = this.authService.token;
+
+  //   if(token != null) {
+  //     return this.httpHeaders.append('Authorization', 'Bearer ' + token);
+  //   }
+  //   return this.httpHeaders;
+  // }
+
+
+// DESACOPLADO
+  // private isNoAutorizado(e): boolean {
+  //   if (e.status == 401) {
+
+  //     if(this.authService.isAuthenticated()) {
+  //       this.authService.logout();
+  //     }
+
+  //     this.router.navigate(['/login'])
+  //     return true;
+  //   }
+
+  //   if (e.status == 403) {
+  //     swal('Acceso denegado', `Hola ${this.authService.usuario.username} no tienes acceso a este recurso!`, 'warning');
+  //     this.router.navigate(['/clientes'])
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   public getRegiones(): Observable<Region[]> {
     return this.http.get<Region[]>(this.urlEndPoint + '/regiones');
+    //.pipe(
+      //catchError(e => {
+        //this.isNoAutorizado(e);
+        //return throwError(() => new Error(e));
+      //})
+    //);
   }
 
   public getErrores(): string[] {
@@ -59,9 +98,14 @@ export class ClienteService {
   }
 
   public create(cliente: Cliente) : Observable<Cliente> {
-    return this.http.post(this.urlEndPoint, cliente, {headers: this.httpHeaders}).pipe(
+    return this.http.post(this.urlEndPoint, cliente).pipe(
       map((response: any) => response.cliente as Cliente),
       catchError(e => {
+
+        // if(this.isNoAutorizado(e)) {
+        //   return throwError(() => new Error(e));
+        // }
+
         if(e.status == 400) {
           this.errores = e.error.errors as string[];
           console.error("Código del error desde el backend: " + e.status);
@@ -69,7 +113,11 @@ export class ClienteService {
           throw new Error(e);
         }
 
-        swal(e.error.mensaje, e.error.error, 'error');
+        if(e.error.mensaje) {
+          console.error(e.error.mensaje);
+        }
+
+        // swal(e.error.mensaje, e.error.error, 'error');
         return throwError(() => new Error(e));
       })
     );
@@ -78,36 +126,58 @@ export class ClienteService {
   public getCliente(id: number): Observable<Cliente> {
     return this.http.get<Cliente>(`${this.urlEndPoint}/${id}`).pipe(
       catchError(e => {
-        this.router.navigate(['/clientes']);
-        console.error(e.error.mensaje);
-        swal('Error al editar', e.error.mensaje, 'error');
+
+        // if(this.isNoAutorizado(e)) {
+        //   return throwError(() => new Error(e));
+        // }
+
+        if(e.status != 401 && e.error.mensaje) {
+          this.router.navigate(['/clientes']);
+          console.error(e.error.mensaje);
+        }
+        // swal('Error al editar', e.error.mensaje, 'error');
         return throwError(() => new Error(e));
       })
     );
   }
 
   public udpate(cliente: Cliente): Observable<Cliente>{
-    return this.http.put(`${this.urlEndPoint}/${cliente.id}`, cliente, {headers: this.httpHeaders}).pipe(
+    return this.http.put(`${this.urlEndPoint}/${cliente.id}`, cliente).pipe(
       map((response: any) => response.cliente as Cliente),
       catchError(e => {
+
+        // if(this.isNoAutorizado(e)) {
+        //   return throwError(() => new Error(e));
+        // }
+
         if(e.status == 400) {
           this.errores = e.error.errors as string[];
           console.error("Código del error desde el backend: " + e.status);
           console.error(e.error.errors);
           throw new Error(e);
         }
+        if(e.error.mensaje) {
+          console.error(e.error.mensaje);
+        }
 
-        swal(e.error.mensaje, e.error.error, 'error');
+        // swal(e.error.mensaje, e.error.error, 'error');
         return throwError(() => new Error(e));
       })
     )
   }
 
   public delete(id: number): Observable<Cliente> {
-    return this.http.delete<Cliente>(`${this.urlEndPoint}/${id}`, {headers: this.httpHeaders}).pipe(
+    return this.http.delete<Cliente>(`${this.urlEndPoint}/${id}`).pipe(
       catchError(e => {
-        console.error(e.error.mensaje);
-        swal(e.error.mensaje, e.error.error, 'error');
+
+        // if(this.isNoAutorizado(e)) {
+        //   return throwError(() => new Error(e));
+        // }
+
+        if(e.error.mensaje) {
+          console.error(e.error.mensaje);
+        }
+        // swal(e.error.mensaje, e.error.error, 'error');
         return throwError(() => new Error(e));
       })
     )
@@ -118,10 +188,23 @@ export class ClienteService {
     formData.append("archivo", archivo);
     formData.append("id", id);
 
+    // let httpHeaders = new HttpHeaders(); 
+    // let token = this.authService.token;
+
+    // if(token != null) {
+    //   httpHeaders = httpHeaders.append('Authorization', 'Bearer ' + token);
+    // }
+
     const req = new HttpRequest('POST', `${this.urlEndPoint}/upload`, formData, {
       reportProgress: true
     })
 
-    return this.http.request(req);
+    return this.http.request(req)
+    // .pipe(
+    //   catchError(e => {
+    //     this.isNoAutorizado(e);
+    //     return throwError(() => new Error(e));
+    //   })
+    // );
   }
 }
