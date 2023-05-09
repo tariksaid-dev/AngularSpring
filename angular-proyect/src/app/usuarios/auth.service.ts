@@ -79,6 +79,7 @@ export class AuthService {
 
   public obtenerDatosToken(accessToken: string): any {
     if (accessToken != null) {
+      console.log(accessToken.split(".")[1] + "\n --------------------------");
       return JSON.parse(window.atob(accessToken.split(".")[1]));
     }
     return null;

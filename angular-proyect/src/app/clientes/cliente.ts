@@ -1,11 +1,13 @@
 import { Region } from "./region";
+import { Factura } from "../facturas/models/factura";
 
 export class Cliente {
-  id!: number ;
-  nombre!: string ;
-  apellido!: string;
-  createAt!: string;
-  email!: string;
-  foto!: string;
-  region!: Region; 
+  public id!: number ;
+  public nombre!: string ;
+  public apellido!: string;
+  public createAt!: string;
+  public email!: string;
+  public foto!: string;
+  public region!: Region; 
+  public facturas: Factura[] = [];
 }

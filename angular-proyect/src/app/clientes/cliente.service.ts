@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Cliente } from './cliente';
 import { Observable, map, catchError, throwError, tap } from 'rxjs';
-import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Region } from './region';
-import swal from 'sweetalert2';
-import { AuthService } from '../usuarios/auth.service';
-
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +33,7 @@ export class ClienteService {
   // }
 
 
-// DESACOPLADO
+
   // private isNoAutorizado(e): boolean {
   //   if (e.status == 401) {
 
@@ -57,13 +54,13 @@ export class ClienteService {
   // }
 
   public getRegiones(): Observable<Region[]> {
-    return this.http.get<Region[]>(this.urlEndPoint + '/regiones');
-    //.pipe(
-      //catchError(e => {
-        //this.isNoAutorizado(e);
-        //return throwError(() => new Error(e));
-      //})
-    //);
+    return this.http.get<Region[]>(this.urlEndPoint + '/regiones')
+    // .pipe(
+    //   catchError(e => {
+    //     this.isNoAutorizado(e);
+    //     return throwError(() => new Error(e));
+    //   })
+    // );
   }
 
   public getErrores(): string[] {
@@ -113,11 +110,10 @@ export class ClienteService {
           throw new Error(e);
         }
 
+        // swal(e.error.mensaje, e.error.error, 'error');
         if(e.error.mensaje) {
           console.error(e.error.mensaje);
         }
-
-        // swal(e.error.mensaje, e.error.error, 'error');
         return throwError(() => new Error(e));
       })
     );
@@ -135,6 +131,9 @@ export class ClienteService {
           this.router.navigate(['/clientes']);
           console.error(e.error.mensaje);
         }
+
+        this.router.navigate(['/clientes']);
+        console.error(e.error.mensaje);
         // swal('Error al editar', e.error.mensaje, 'error');
         return throwError(() => new Error(e));
       })
@@ -156,11 +155,11 @@ export class ClienteService {
           console.error(e.error.errors);
           throw new Error(e);
         }
+
+        // swal(e.error.mensaje, e.error.error, 'error');
         if(e.error.mensaje) {
           console.error(e.error.mensaje);
         }
-
-        // swal(e.error.mensaje, e.error.error, 'error');
         return throwError(() => new Error(e));
       })
     )

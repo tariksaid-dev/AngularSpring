@@ -22,7 +22,6 @@ export class AuthInterceptor implements HttpInterceptor{
           if(this.authService.isAuthenticated()) {
             this.authService.logout();
           }
-    
           this.router.navigate(['/login'])
         }
     
@@ -30,7 +29,6 @@ export class AuthInterceptor implements HttpInterceptor{
           swal('Acceso denegado', `Hola ${this.authService.usuario.username} no tienes acceso a este recurso!`, 'warning');
           this.router.navigate(['/clientes'])
         }
-
         return throwError(() => new Error(e));
       })
     );

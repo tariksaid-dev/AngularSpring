@@ -60,9 +60,7 @@ const routes: Routes = [
   providers: [ClienteService, 
     {provide: LOCALE_ID, useValue: 'es' },
     {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
-  ],
-    
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
