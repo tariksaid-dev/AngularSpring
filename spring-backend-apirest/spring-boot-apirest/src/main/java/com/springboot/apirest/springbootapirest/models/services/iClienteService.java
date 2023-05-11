@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.springboot.apirest.springbootapirest.models.entity.Cliente;
+import com.springboot.apirest.springbootapirest.models.entity.Factura;
 import com.springboot.apirest.springbootapirest.models.entity.Region;
 
 public interface iClienteService {
@@ -21,4 +22,10 @@ public interface iClienteService {
   public void delete(Long id);
 
   public List<Region> findAllRegiones();
+
+  public Factura findFacturaById(Long id);
+
+  public Factura saveFactura(Factura factura);
+
+  public void deleteFacturaById(Long id);
 }

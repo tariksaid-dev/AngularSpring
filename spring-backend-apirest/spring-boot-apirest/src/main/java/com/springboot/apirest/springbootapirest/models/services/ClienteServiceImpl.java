@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.springboot.apirest.springbootapirest.models.dao.iClienteDao;
+import com.springboot.apirest.springbootapirest.models.dao.iFacturaDao;
 import com.springboot.apirest.springbootapirest.models.entity.Cliente;
+import com.springboot.apirest.springbootapirest.models.entity.Factura;
 import com.springboot.apirest.springbootapirest.models.entity.Region;
 
 @Service
@@ -17,6 +19,9 @@ public class ClienteServiceImpl implements iClienteService {
 
   @Autowired
   private iClienteDao clienteDao;
+
+  @Autowired
+  private iFacturaDao facturaDao;
 
   @Override
   @Transactional(readOnly = true)
@@ -52,5 +57,23 @@ public class ClienteServiceImpl implements iClienteService {
   @Transactional(readOnly = true)
   public List<Region> findAllRegiones() {
     return clienteDao.findAllRegiones();
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Factura findFacturaById(Long id) {
+    return facturaDao.findById(id).orElse(null);
+  }
+
+  @Override
+  @Transactional
+  public void deleteFacturaById(Long id) {
+    facturaDao.deleteById(id);
+  }
+
+  @Override
+  @Transactional
+  public Factura saveFactura(Factura factura) {
+    return facturaDao.save(factura);
   }
 }
