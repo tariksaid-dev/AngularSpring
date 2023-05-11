@@ -10,8 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.springboot.apirest.springbootapirest.models.dao.iClienteDao;
 import com.springboot.apirest.springbootapirest.models.dao.iFacturaDao;
+import com.springboot.apirest.springbootapirest.models.dao.iProductoDao;
 import com.springboot.apirest.springbootapirest.models.entity.Cliente;
 import com.springboot.apirest.springbootapirest.models.entity.Factura;
+import com.springboot.apirest.springbootapirest.models.entity.Producto;
 import com.springboot.apirest.springbootapirest.models.entity.Region;
 
 @Service
@@ -22,6 +24,9 @@ public class ClienteServiceImpl implements iClienteService {
 
   @Autowired
   private iFacturaDao facturaDao;
+
+  @Autowired
+  private iProductoDao productoDao;
 
   @Override
   @Transactional(readOnly = true)
@@ -75,5 +80,11 @@ public class ClienteServiceImpl implements iClienteService {
   @Transactional
   public Factura saveFactura(Factura factura) {
     return facturaDao.save(factura);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<Producto> findProductoByNombre(String term) {
+    return productoDao.findByNombre(term);
   }
 }
