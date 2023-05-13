@@ -37,7 +37,7 @@ import com.springboot.apirest.springbootapirest.models.entity.Region;
 import com.springboot.apirest.springbootapirest.models.services.iClienteService;
 import com.springboot.apirest.springbootapirest.models.services.iUploadFileService;
 
-@CrossOrigin(origins = { "http://localhost:4200" })
+@CrossOrigin(origins = { "http://localhost:4200", "*" })
 @RestController
 @RequestMapping("/api")
 public class ClienteRestController {

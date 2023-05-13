@@ -19,7 +19,7 @@ import com.springboot.apirest.springbootapirest.models.entity.Factura;
 import com.springboot.apirest.springbootapirest.models.entity.Producto;
 import com.springboot.apirest.springbootapirest.models.services.iClienteService;
 
-@CrossOrigin(origins = { "http://localhost:4200" })
+@CrossOrigin(origins = { "http://localhost:4200", "*" })
 @RestController
 @RequestMapping("/api")
 public class FacturaRestController {
