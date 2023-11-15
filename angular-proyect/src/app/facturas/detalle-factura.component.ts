@@ -5,27 +5,23 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-detalle-factura',
-  templateUrl: './detalle-factura.component.html'
+  templateUrl: './detalle-factura.component.html',
 })
 export class DetalleFacturaComponent implements OnInit {
-
   public factura: Factura;
   public titulo: string = 'Factura';
-  
+
   constructor(
     private facturaService: FacturaService,
     private activatedRoute: ActivatedRoute
   ) {}
 
-
   ngOnInit(): void {
-    this.activatedRoute.paramMap.subscribe(params => {
+    this.activatedRoute.paramMap.subscribe((params) => {
       let id = +params.get('id');
-      this.facturaService.getFactura(id).subscribe(factura => {
-        this.factura = factura
+      this.facturaService.getFactura(id).subscribe((factura) => {
+        this.factura = factura;
       });
     });
   }
-
-  
 }

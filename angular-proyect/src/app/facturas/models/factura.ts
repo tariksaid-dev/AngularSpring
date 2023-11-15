@@ -1,5 +1,5 @@
-import { Cliente } from "src/app/clientes/cliente";
-import { ItemFactura } from "./item-factura";
+import { Cliente } from 'src/app/clientes/cliente';
+import { ItemFactura } from './item-factura';
 
 export class Factura {
   public id: number;

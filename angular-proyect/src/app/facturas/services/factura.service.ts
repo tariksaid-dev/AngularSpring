@@ -5,15 +5,12 @@ import { Factura } from '../models/factura';
 import { Producto } from '../models/producto';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FacturaService {
+  private urlEndPoint: string = 'http://localhost:8080/api/facturas';
 
-  private urlEndPoint: string = 'http://localhost:8080/api/facturas'
-
-  constructor(
-    private http: HttpClient
-  ) { }
+  constructor(private http: HttpClient) {}
 
   public getFactura(id: number): Observable<Factura> {
     return this.http.get<Factura>(`${this.urlEndPoint}/${id}`);
@@ -24,7 +21,9 @@ export class FacturaService {
   }
 
   public filtrarProductos(term: string): Observable<Producto[]> {
-    return this.http.get<Producto[]>(`${this.urlEndPoint}/filtrar-productos/${term}`); 
+    return this.http.get<Producto[]>(
+      `${this.urlEndPoint}/filtrar-productos/${term}`
+    );
   }
 
   public create(factura: Factura): Observable<Factura> {

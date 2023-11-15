@@ -6,22 +6,23 @@ import swal from 'sweetalert2';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent {
-  public title: string = "Angular - Spring"
+  public title: string = 'Angular - Spring';
 
-  constructor(
-    public authService: AuthService,
-    public router: Router
-  ) {}
+  constructor(public authService: AuthService, public router: Router) {}
 
   public logout(): void {
     let username = this.authService.usuario.username;
 
     this.authService.logout();
-    
-    swal('Logout', `Hola ${username}, has cerrado sesión con éxito!`, 'success');
+
+    swal(
+      'Logout',
+      `Hola ${username}, has cerrado sesión con éxito!`,
+      'success'
+    );
 
     this.router.navigate(['/login']);
   }
